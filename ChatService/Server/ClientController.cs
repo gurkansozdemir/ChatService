@@ -9,5 +9,10 @@ namespace Server
         {
             Clients.Add(socket);
         }
+
+        public static void RemoveClient(Socket socket)
+        {
+            Clients.Remove(socket);
+        }
     }
 }

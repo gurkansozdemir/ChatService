@@ -16,7 +16,10 @@ namespace Server.Sockets
         {
             _buffer = new byte[4];
             // Client'tan gelen datayı dinliyor data geldiğinde receiveCollback metodunu çalıştırıyor..
-            _receiveSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceiveCallback, null);
+            if (_receiveSocket.Connected)
+            {
+                _receiveSocket.BeginReceive(_buffer, 0, _buffer.Length, SocketFlags.None, ReceiveCallback, null);
+            } 
         }
 
         private void ReceiveCallback(IAsyncResult AR)
@@ -46,7 +49,14 @@ namespace Server.Sockets
             foreach (var receiver in ClientController.Clients)
             {
                 // Gelen datayı server'a bağlanan tüm client'lara gönderiyor..
-                receiver.Send(fullPacket.ToArray());
+                if (receiver.Connected)
+                {
+                    receiver.Send(fullPacket.ToArray());
+                }
+                else
+                {
+                    ClientController.RemoveClient(receiver);
+                }           
             }
         }
     }

@@ -51,5 +51,10 @@ namespace Client.Sockets
                 Console.WriteLine(e.Message);
             }
         }
+
+        public void Disconnect()
+        {
+            _socket.DisconnectAsync(true);
+        }
     }
 }
