@@ -2,7 +2,7 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace Client
+namespace Client.Sockets
 {
     internal class ClientSocket
     {
@@ -37,12 +37,19 @@ namespace Client
 
         private void ReceiveCallback(IAsyncResult AR)
         {
-            _buffer = new byte[BitConverter.ToInt32(_buffer, 0)];
-            _socket.Receive(_buffer, _buffer.Length, SocketFlags.None);
-            string data = Encoding.Default.GetString(_buffer);
-            Console.WriteLine($"\t\t\t {data}");
-            // Gelen datayı ekrana bastıktan sonra tekrar dinlemeye geçiyor..
-            StartReceiving();
+            try
+            {
+                _buffer = new byte[BitConverter.ToInt32(_buffer, 0)];
+                _socket.Receive(_buffer, _buffer.Length, SocketFlags.None);
+                string data = Encoding.Default.GetString(_buffer);
+                Console.WriteLine($"\t\t\t {data}");
+                // Gelen datayı ekrana bastıktan sonra tekrar dinlemeye geçiyor..
+                StartReceiving();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
         }
     }
 }
