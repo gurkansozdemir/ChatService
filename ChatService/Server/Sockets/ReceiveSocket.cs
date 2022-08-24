@@ -42,6 +42,7 @@ namespace Server.Sockets
 
         public void Send(string data)
         {
+            data = DateTime.Now.ToString() + ":" + data;
             var fullPacket = new List<byte>();
             fullPacket.AddRange(BitConverter.GetBytes(data.Length));
             fullPacket.AddRange(Encoding.Default.GetBytes(data));
@@ -49,14 +50,10 @@ namespace Server.Sockets
             foreach (var receiver in ClientController.Clients)
             {
                 // Gelen datayı server'a bağlanan tüm client'lara gönderiyor..
-                if (receiver.Connected)
+                if (receiver.Connected && receiver != _receiveSocket)
                 {
                     receiver.Send(fullPacket.ToArray());
-                }
-                else
-                {
-                    ClientController.RemoveClient(receiver);
-                }           
+                }      
             }
         }
     }
