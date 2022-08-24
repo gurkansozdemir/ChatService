@@ -53,8 +53,19 @@ namespace Server
             _acceptedSocket.Receive(_buffer, _buffer.Length, SocketFlags.None);
             string data = Encoding.Default.GetString(_buffer);
             Console.Write($"İstemci Mesaji: {data}");
+            Send(data);
             // Gelen datayı ekrana bastıktan sonra tekrar dinlemeye geçiyor..
             StartReceiving();
+        }
+
+        public void Send(string data)
+        {
+            var fullPacket = new List<byte>();
+            fullPacket.AddRange(BitConverter.GetBytes(data.Length));
+            fullPacket.AddRange(Encoding.Default.GetBytes(data));
+
+            // Sunucuya gelen data tekrar client'a iletiliyor..
+            _acceptedSocket.Send(fullPacket.ToArray());
         }
     }
 }
