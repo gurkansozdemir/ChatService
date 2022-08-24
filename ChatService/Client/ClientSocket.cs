@@ -40,7 +40,7 @@ namespace Client
             _buffer = new byte[BitConverter.ToInt32(_buffer, 0)];
             _socket.Receive(_buffer, _buffer.Length, SocketFlags.None);
             string data = Encoding.Default.GetString(_buffer);
-            Console.Write($"Sunucu Mesaji: {data}");
+            Console.WriteLine($"\t\t\t {data}");
             // Gelen datayı ekrana bastıktan sonra tekrar dinlemeye geçiyor..
             StartReceiving();
         }

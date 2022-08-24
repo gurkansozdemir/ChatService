@@ -12,6 +12,7 @@ namespace Server
         private readonly int _port;
         private readonly IPEndPoint _localEndPoint;
         private byte[] _buffer;
+        public static List<Socket> clients = new List<Socket>();
 
         public ServerSocket(string host, int port)
         {
@@ -35,7 +36,8 @@ namespace Server
         {
             // Server'a bağlanan client'lar yakalanır..
             _acceptedSocket = _listenerSocket.EndAccept(ar);
-            Console.WriteLine("Bir İstemci Bağlandı");        
+            Console.WriteLine("Bir İstemci Bağlandı");
+            clients.Add(_acceptedSocket);
             StartReceiving();
             _listenerSocket.BeginAccept(AcceptCallback, _listenerSocket);
         }
@@ -52,20 +54,22 @@ namespace Server
             _buffer = new byte[BitConverter.ToInt32(_buffer, 0)];
             _acceptedSocket.Receive(_buffer, _buffer.Length, SocketFlags.None);
             string data = Encoding.Default.GetString(_buffer);
-            Console.Write($"İstemci Mesaji: {data}");
-            Send(data);
-            // Gelen datayı ekrana bastıktan sonra tekrar dinlemeye geçiyor..
+            Console.Write($"İstemci Mesajı: {data} \n");
+            foreach (var item in clients)
+            {
+                // Gelen datayı server'a bağlanan tüm client'lara gönderiyor..
+                Send(data, item);
+            }         
             StartReceiving();
         }
 
-        public void Send(string data)
+        public void Send(string data, Socket receiver)
         {
             var fullPacket = new List<byte>();
             fullPacket.AddRange(BitConverter.GetBytes(data.Length));
             fullPacket.AddRange(Encoding.Default.GetBytes(data));
-
             // Sunucuya gelen data tekrar client'a iletiliyor..
-            _acceptedSocket.Send(fullPacket.ToArray());
+            receiver.Send(fullPacket.ToArray());
         }
     }
 }

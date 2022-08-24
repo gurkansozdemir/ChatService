@@ -10,7 +10,6 @@ public class Program
         Console.WriteLine("Sunucu Bağlantısı Hazır.");
         while (true)
         {
-            Console.Write("Mesaj:");
             clientSocket.Send(Console.ReadLine());
         }
     }
