@@ -2,21 +2,31 @@
 using System.Net.Sockets;
 using System.Text;
 
-namespace Client.Sockets
+namespace Client.Core.Sockets
 {
-    internal class ClientSocket
+    public class ClientSocket
     {
         private Socket _socket;
         private byte[] _buffer;
-        public void ConnectServer(string host, int port)
+        public bool ConnectServer(string host, int port)
         {
-            _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            while (!_socket.Connected)
+            bool response = false;
+            try
             {
-                // Bağlanılmak istenilen sunucu ip ve port bilgisini alır ve sunucu ile bağlantı kurulur..
-                _socket.Connect(new IPEndPoint(IPAddress.Parse(host), port));
+                _socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                while (!_socket.Connected)
+                {
+                    // Bağlanılmak istenilen sunucu ip ve port bilgisini alır ve sunucu ile bağlantı kurulur..
+                    _socket.Connect(new IPEndPoint(IPAddress.Parse(host), port));
+                }
+                StartReceiving();
+                response = true;
             }
-            StartReceiving();
+            catch (Exception)
+            {
+                response = false;
+            }
+            return response;
         }
 
         public void Send(string data)

@@ -1,8 +1,8 @@
 ﻿using System.Net.Sockets;
 
-namespace Server
+namespace Server.Core.Controllers
 {
-    internal class ClientController
+    public class ClientController
     {
         public static List<Socket> Clients = new List<Socket>();
         public static void AddClient(Socket socket)

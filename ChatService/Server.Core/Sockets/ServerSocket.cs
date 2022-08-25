@@ -1,10 +1,10 @@
-﻿using Server.Controllers;
+﻿using Server.Core.Controllers;
 using System.Net;
 using System.Net.Sockets;
 
-namespace Server.Sockets
+namespace Server.Core.Sockets
 {
-    internal class ServerSocket
+    public class ServerSocket
     {
         private readonly Socket _listenerSocket;
         private Socket _acceptedSocket;

@@ -1,10 +1,10 @@
-﻿using Server.Controllers;
+﻿using Server.Core.Controllers;
 using System.Net.Sockets;
 using System.Text;
 
-namespace Server.Sockets
+namespace Server.Core.Sockets
 {
-    internal class ReceiveSocket
+    public class ReceiveSocket
     {
         private byte[] _buffer;
         private readonly Socket _receiveSocket;

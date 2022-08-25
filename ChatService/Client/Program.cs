@@ -1,4 +1,4 @@
-﻿using Client.Sockets;
+﻿using Client.Core.Sockets;
 
 public class Program
 {
